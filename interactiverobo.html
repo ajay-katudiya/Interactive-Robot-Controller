@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#x1F916;</text></svg>">
+    <title>Interactive Robot Controllers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #night-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.411);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        #loader {
+            color: white;
+            font-size: 24px;
+        }
+
+        #fps-stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ff88;
+            padding: 15px 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            z-index: 10;
+            min-width: 120px;
+            line-height: 1.8;
+            border: 1px solid #00ff88;
+        }
+
+        #fps-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+
+        .fps-status-good {
+            color: #00ff88;
+        }
+
+        .fps-status-ok {
+            color: #ffff00;
+        }
+
+        .fps-status-poor {
+            color: #ff4444;
+        }
+
+        @media (max-width: 768px) {
+            #fps-stats {
+                font-size: 10px;
+            }
+
+            #night-toggle {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="loading-screen">
+        <div id="loader">0%...</div>
+    </div>
+    <button id="night-toggle">Toggle Night Mode</button>
+    <!-- fps stats -->
+    <div id="fps-stats">
+        <div id="fps-value">FPS: --</div>
+        <div id="fps-frame-time">Frame: -- ms</div>
+        <div id="fps-status">Status: --</div>
+        <div id="fps-quality">Quality: High</div>
+    </div>
+    <script type="module" src="./roboControls.js"></script>
+</body>
+
+</html>
