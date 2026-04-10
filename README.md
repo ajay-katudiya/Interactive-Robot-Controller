@@ -148,18 +148,3 @@ Edit FPS thresholds in `fpsMonitor.js`:
 const UI_UPDATE_INTERVAL = 200;      // UI update frequency (ms)
 const QUALITY_CHECK_INTERVAL = 15;   // Quality check frequency (frames)
 ```
-
-## 🚀 Deployment
-
-1. Ensure all assets are properly linked
-2. Use a local server (required for ES6 modules)
-3. Verify Three.js CDN is accessible
-4. Test on target browsers before deployment
-
-## 📝 Performance Tips
-
-1. **Reduce Draw Calls**: Use InstancedMesh for repeated geometry
-2. **Optimize Models**: Keep polygon count reasonable
-3. **Cache DOM Elements**: Already implemented in FPS monitor
-4. **Throttle Updates**: UI updates are already throttled to 200ms
-5. **Monitor Quality**: Watch the FPS stats indicator
