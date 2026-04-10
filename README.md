@@ -43,7 +43,7 @@ A high-performance 3D robot controller built with Three.js featuring dynamic ani
 
 ## Tech Stack
 
-- Three.js (r150+)
+- Three.js (r182)
 - WebGL with post-processing (Bloom effect)
 - ES6 Modules for clean code organization
 - GLTF/GLB Model Format

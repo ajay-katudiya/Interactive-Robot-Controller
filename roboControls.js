@@ -15,7 +15,7 @@ import {
     LoadingManager,
     SRGBColorSpace,
     AnimationMixer
-} from './build/three.module.js';
+} from './build/three.module.min.js';
 import { GLTFLoader } from './examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from './examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from './examples/jsm/postprocessing/RenderPass.js';
