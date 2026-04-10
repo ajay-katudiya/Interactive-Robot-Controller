@@ -32,70 +32,134 @@
 
 A high-performance 3D robot controller built with Three.js featuring dynamic animations, interactive raycasting, adaptive FPS monitoring, and night mode with bloom effects.
 
-## Features
+## 🚀 Features
 
 - **Dynamic Animations**: Walk, Jump, and Idle animations with smooth transitions
 - **Interactive Raycasting**: Click the robot's head to jump or torso to toggle walking
-- **FPS Monitoring**: Real-time FPS tracking with adaptive quality adjustment
-- **Night Mode**: Toggle between day and night modes with dynamic lighting and bloom effects
-- **Performance Optimized**: Adaptive quality levels (Low, Medium, High) for consistent performance
-- **Mobile Responsive**: Touch support and mobile-optimized rendering
+- **Real-Time FPS Monitoring**: Live FPS tracking with frame time display
+- **Adaptive Quality System**: Automatic quality adjustment (Low/Medium/High) based on performance
+- **Night Mode**: Toggle between day and night modes with dynamic lighting
+- **Bloom Effects**: Post-processing bloom effect for enhanced visuals
+- **Mobile Responsive**: Touch support and device pixel ratio optimization
+- **Modular Architecture**: Separated concerns with dedicated FPS monitoring module
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- Three.js (r182)
-- WebGL with post-processing (Bloom effect)
-- ES6 Modules for clean code organization
-- GLTF/GLB Model Format
+- **Engine**: Three.js (r182+)
+- **Rendering**: WebGL 2.0 with EffectComposer
+- **Post-Processing**: UnrealBloomPass
+- **Module System**: ES6 Modules
+- **Model Format**: GLTF/GLB (RobotExpressive)
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 Interactive Robot Controller/
-├── roboControls.js          # Main application logic
-├── fpsMonitor.js            # FPS tracking & quality management
-├── interactiverobo.html     # HTML entry point
-├── README.md                # Project documentation
-└── assets/                  # 3D models and resources
-    └── RobotExpressive/
-        └── RobotExpressive.glb
+├── roboControls.js              # Main application & scene setup
+├── fpsMonitor.js                # FPS tracking & quality management
+├── interactiverobo.html         # HTML entry point
+├── README.md                    # Project documentation
+├── assets/                      # 3D models and resources
+│   └── RobotExpressive.glb
+└── build/                       # Three.js build files
 ```
 
-## Usage
+## 🎮 Usage & Controls
 
+### Interaction
 1. Open `interactiverobo.html` in a modern web browser
-2. Click the robot to interact:
-   - **Head**: Triggers jump animation
-   - **Torso**: Toggles between walking and idle
-3. **Night Mode**: Click the button to toggle night mode with dynamic lighting
-4. Monitor FPS stats in the top-right corner
+2. **Robot Head**: Click to trigger jump animation
+3. **Robot Torso**: Click to toggle between walking and idle states
+4. **Night Mode Button**: Toggle between day/night lighting modes
+5. **Mouse Movement** (Night Mode): Move the dynamic light with your cursor
 
-## Controls
+### Input Methods
+- **Desktop**: Mouse clicks and movements
+- **Mobile**: Touch taps and gestures
+- **Window Resize**: Automatically adapts viewport
 
-- **Mouse Click**: Interact with robot parts
-- **Mouse Move** (Night Mode): Move the light source with cursor
-- **Touch**: Mobile-friendly touch interactions
-- **Resize**: Automatically adapts to window resize
+## 📊 Performance Monitoring
 
-## Performance
+Real-time FPS stats displayed in top-right corner:
 
-The FPS monitor automatically adjusts render quality based on performance:
+```
+FPS: 60          (Current frames per second)
+Frame: 16.67ms   (Milliseconds per frame)
+Status: Optimal  (Performance indicator)
+Quality: High    (Current quality level)
+```
 
-- **60+ FPS**: High quality (2x pixel ratio, 6 bloom iterations)
-- **50+ FPS**: Medium quality (1.5x pixel ratio, 4 bloom iterations)
-- **<50 FPS**: Low quality (1x pixel ratio, 2 bloom iterations)
+### Adaptive Quality System
 
-## Development
+Automatically adjusts rendering quality to maintain smooth performance:
 
-To modify the project:
+| Quality Level | FPS Target | Pixel Ratio | Bloom Iterations |
+|---|---|---|---|
+| **High** | 60+ | 2x | 6 |
+| **Medium** | 50+ | 1.5x | 4 |
+| **Low** | 45+ | 1x | 2 |
 
-1. **Animations**: Edit animation names in `roboControls.js`
-2. **Lighting**: Adjust light intensity and colors
-3. **FPS Thresholds**: Modify `UI_UPDATE_INTERVAL` and `QUALITY_CHECK_INTERVAL` in `fpsMonitor.js`
-4. **Model**: Replace the model path in asset loading section
+Quality automatically scales down if FPS drops below 45 and up if it exceeds 55 to maintain optimal performance.
 
-## Browser Support
+## 🔧 Modular Components
 
-- Chrome, Edge, Firefox, Safari (modern versions)
-- Requires WebGL 2.0 support
-- Recommended: Desktop or high-end mobile devices
+### roboControls.js
+- Scene initialization and setup
+- Camera and renderer configuration
+- Animation management and blending
+- Event handling (click, touch, resize)
+- Raycasting for object interaction
+- Night mode toggle logic
+
+### fpsMonitor.js
+- FPS calculation using circular buffer (O(1) complexity)
+- Frame time averaging over 30-frame window
+- Automatic quality adjustment based on performance
+- DOM element caching for optimal updates
+- Throttled UI updates (200ms intervals)
+
+## 📱 Compatibility
+
+- **Browsers**: Chrome, Edge, Firefox, Safari (latest versions)
+- **API**: Requires WebGL 2.0 support
+- **Platform**: Desktop, Tablet, Mobile
+- **Performance**: Optimized for 30-120 FPS range
+
+## 🎨 Customization
+
+### Modify Animations
+Edit animation transitions in `roboControls.js`:
+```javascript
+loader.load('./assets/RobotExpressive.glb', (gltf) => {
+    // Add custom animation logic here
+});
+```
+
+### Adjust Lighting
+Modify light intensity and colors:
+```javascript
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+const pointLight = new THREE.PointLight(0x00ff88, 0, 15);
+```
+
+### Quality Thresholds
+Edit FPS thresholds in `fpsMonitor.js`:
+```javascript
+const UI_UPDATE_INTERVAL = 200;      // UI update frequency (ms)
+const QUALITY_CHECK_INTERVAL = 15;   // Quality check frequency (frames)
+```
+
+## 🚀 Deployment
+
+1. Ensure all assets are properly linked
+2. Use a local server (required for ES6 modules)
+3. Verify Three.js CDN is accessible
+4. Test on target browsers before deployment
+
+## 📝 Performance Tips
+
+1. **Reduce Draw Calls**: Use InstancedMesh for repeated geometry
+2. **Optimize Models**: Keep polygon count reasonable
+3. **Cache DOM Elements**: Already implemented in FPS monitor
+4. **Throttle Updates**: UI updates are already throttled to 200ms
+5. **Monitor Quality**: Watch the FPS stats indicator

@@ -113,9 +113,8 @@ function init() {
 
     renderer.domElement.addEventListener('click', onMouseClick);
     renderer.domElement.addEventListener('mousemove', onMouseMove);
-    // mobile event listeners
-    renderer.domElement.addEventListener('touchend', onMouseClick);
-    renderer.domElement.addEventListener('touchmove', onMouseMove);
+    renderer.domElement.addEventListener('touchstart', onTouchClick);
+    renderer.domElement.addEventListener('touchmove', onTouchMove);
     nightToggle.addEventListener('click', toggleNightMode);
     window.addEventListener('resize', onWindowResize);
 
@@ -142,6 +141,25 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
     composer.setSize(width, height);
+}
+
+function getPointerCoords(event) {
+    let clientX = event.clientX;
+    let clientY = event.clientY;
+    
+    if (event.touches?.length > 0) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    }
+    
+    return { clientX, clientY };
+}
+
+function getNormalizedCoords(clientX, clientY) {
+    return {
+        x: (clientX / width) * 2 - 1,
+        y: -(clientY / height) * 2 + 1
+    };
 }
 /**
  * Fades to a different animation action
@@ -178,8 +196,10 @@ function fadeToAction(name, duration = 0.5, loop = true) {
  * @param {MouseEvent} event - The mouse click event
  */
 function onMouseClick(event) {
-    mouse.x = (event.clientX / width) * 2 - 1;
-    mouse.y = -(event.clientY / height) * 2 + 1;
+    const { clientX, clientY } = getPointerCoords(event);
+    const coords = getNormalizedCoords(clientX, clientY);
+    
+    mouse.set(coords.x, coords.y);
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(robot.children, true);
@@ -204,19 +224,36 @@ function onMouseClick(event) {
  */
 function onMouseMove(event) {
     if (!nightMode) return;
-    // Project mouse to 3D space for the PointLight
+    updatePointLight(event.clientX, event.clientY);
+}
+
+function onTouchMove(event) {
+    if (!nightMode || !event.touches?.length) return;
+    const { clientX, clientY } = getPointerCoords(event);
+    updatePointLight(clientX, clientY);
+}
+
+function updatePointLight(clientX, clientY) {
+    const coords = getNormalizedCoords(clientX, clientY);
     const vec = new Vector3();
     const pos = new Vector3();
-    if (event.touches && event.touches.length > 0) {
-        event.clientX = event.touches[0].clientX;
-        event.clientY = event.touches[0].clientY;
-    }
-    vec.set((event.clientX / width) * 2 - 1, -(event.clientY / height) * 2 + 1, 0.5);
+    
+    vec.set(coords.x, coords.y, 0.5);
     vec.unproject(camera);
     vec.sub(camera.position).normalize();
     const distance = -camera.position.z / vec.z;
     pos.copy(camera.position).add(vec.multiplyScalar(distance));
-    pointLight.position.lerp(pos, 0.01); // Smooth following
+    pointLight.position.lerp(pos, 0.01);
+}
+
+function onTouchClick(event) {
+    if (!event.changedTouches?.length) return;
+    const touch = event.changedTouches[0];
+    const syntheticEvent = {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+    };
+    onMouseClick(syntheticEvent);
 }
 
 /**
