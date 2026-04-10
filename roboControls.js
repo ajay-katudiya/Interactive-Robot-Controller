@@ -207,6 +207,10 @@ function onMouseMove(event) {
     // Project mouse to 3D space for the PointLight
     const vec = new Vector3();
     const pos = new Vector3();
+    if (event.touches && event.touches.length > 0) {
+        event.clientX = event.touches[0].clientX;
+        event.clientY = event.touches[0].clientY;
+    }
     vec.set((event.clientX / width) * 2 - 1, -(event.clientY / height) * 2 + 1, 0.5);
     vec.unproject(camera);
     vec.sub(camera.position).normalize();
