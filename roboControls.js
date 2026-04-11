@@ -113,7 +113,7 @@ function init() {
 
     renderer.domElement.addEventListener('click', onMouseClick);
     renderer.domElement.addEventListener('mousemove', onMouseMove);
-    renderer.domElement.addEventListener('touchstart', onTouchClick);
+    renderer.domElement.addEventListener('touch', onTouchClick);
     renderer.domElement.addEventListener('touchmove', onTouchMove);
     nightToggle.addEventListener('click', toggleNightMode);
     window.addEventListener('resize', onWindowResize);
