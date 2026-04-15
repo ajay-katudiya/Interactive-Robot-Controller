@@ -2,13 +2,16 @@
 
 let fps = 0, avgFrameTime = 0;
 const MAX_HISTORY = 30;
+const UI_UPDATE_INTERVAL = 200; // ms
+const QUALITY_CHECK_INTERVAL = 15; // frames
+
 let qualityLevel = 2; // 0 = Low, 1 = Medium, 2 = High
 let bloomPass = null;
 let nightMode = false;
 let renderer = null;
 
 // Circular buffer for frame times (more efficient than array shift)
-let frameTimeBuffer = new Float32Array(MAX_HISTORY);
+const frameTimeBuffer = new Float32Array(MAX_HISTORY);
 let frameTimeIndex = 0;
 let frameTimeSum = 0;
 let lastTime = performance.now();
@@ -16,9 +19,7 @@ let lastUIUpdate = 0;
 let frameCountSinceQualityCheck = 0;
 
 // Cache DOM elements to avoid repeated queries
-let uiElements = { fps: null, frameTime: null, status: null, quality: null };
-const UI_UPDATE_INTERVAL = 200; // ms
-const QUALITY_CHECK_INTERVAL = 15; // frames
+const uiElements = { fps: null, frameTime: null, status: null, quality: null };
 
 const qualityLabels = ['Low', 'Medium', 'High'];
 const statusLabels = {
@@ -26,6 +27,8 @@ const statusLabels = {
     ok: { text: 'Good', class: 'fps-status-ok' },
     poor: { text: 'Low', class: 'fps-status-poor' }
 };
+
+const QUALITY_THRESHOLDS = { low: 45, high: 55, good: 50, ok: 30 };
 
 /**
  * Initialize FPS monitor with renderer and bloom pass
@@ -65,10 +68,9 @@ export function updateFPSStats() {
     lastTime = currentTime;
 
     // Circular buffer: replace oldest value and maintain running sum
-    const oldValue = frameTimeBuffer[frameTimeIndex];
+    frameTimeSum = frameTimeSum - frameTimeBuffer[frameTimeIndex] + frameTime;
     frameTimeBuffer[frameTimeIndex] = frameTime;
     frameTimeIndex = (frameTimeIndex + 1) % MAX_HISTORY;
-    frameTimeSum = frameTimeSum - oldValue + frameTime;
 
     // Calculate average and FPS
     const avgTime = frameTimeSum / MAX_HISTORY;
@@ -76,8 +78,7 @@ export function updateFPSStats() {
     avgFrameTime = avgTime.toFixed(2);
 
     // Quality adjustment - check less frequently to reduce overhead
-    frameCountSinceQualityCheck++;
-    if (frameCountSinceQualityCheck >= QUALITY_CHECK_INTERVAL) {
+    if (++frameCountSinceQualityCheck >= QUALITY_CHECK_INTERVAL) {
         frameCountSinceQualityCheck = 0;
 
         let newQuality = qualityLevel;

@@ -14,7 +14,7 @@
             box-sizing: border-box;
         }
 
-        #container {
+        #container, #loading-screen {
             position: absolute;
             top: 0;
             left: 0;
@@ -34,11 +34,6 @@
         }
 
         #loading-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
             background: rgba(0, 0, 0, 0.411);
             display: flex;
             align-items: center;
@@ -74,7 +69,7 @@
             margin-bottom: 5px;
         }
 
-        .fps-status-good {
+        .fps-status-good, .fps-status-ok, .fps-status-poor {
             color: #00ff88;
         }
 
@@ -96,6 +91,18 @@
                 font-size: 14px;
             }
         }
+
+        @media (max-width: 425px) {
+            #fps-stats {
+                font-size: 8px;
+                padding: 10px 15px;
+            }
+
+            #night-toggle {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 
@@ -112,7 +119,7 @@
         <div id="fps-status">Status: --</div>
         <div id="fps-quality">Quality: High</div>
     </div>
-    <script type="module" src="./roboControls.js"></script>
+    <script defer type="module" src="./roboControls.js"></script>
 </body>
 
 </html>
